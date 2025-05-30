@@ -1,182 +1,261 @@
-# Sistem de Management al Sarcinilor
+Task Management System
 
-## Descriere Generală
+Prezentare generală
 
-Acest proiect implementează un sistem complet de management al sarcinilor în C++11, demonstrând principiile programării orientate pe obiecte (POO). Sistemul permite crearea, organizarea și gestionarea diferitelor tipuri de sarcini, utilizatori, categorii și notificări.
+După câteva luni de dezvoltare, am finalizat acest sistem de management al sarcinilor care demonstrează implementarea principiilor POO în C++11. Proiectul a pornit din nevoia de a crea o soluție flexibilă pentru organizarea și urmărirea sarcinilor în echipe de dezvoltare software, dar poate fi adaptat și pentru alte domenii.
 
-## Structura Proiectului
+Am pus accent pe design-ul arhitectural și pe implementarea elegantă a conceptelor OOP, mai degrabă decât pe interfața utilizator (care ar putea fi dezvoltată ulterior). Codul este structurat pentru extensibilitate și mentenabilitate pe termen lung.
 
-Proiectul este organizat în următoarele componente principale:
+Structură și organizare
 
-### Ierarhia de Clase pentru Sarcini
-- `Task` (clasă abstractă de bază)
-- `Simple_Task` (sarcină simplă)
-- `Project_Task` (sarcină de tip proiect cu sub-sarcini)
-- `Recurring_Task` (sarcină recurentă)
-- `Deadline_Task` (sarcină cu termen limită)
+Proiectul folosește o structură standard cu directoarele include/ pentru headere și src/ pentru implementări:
 
-### Ierarhia de Clase pentru Utilizatori
-- `User` (utilizator standard)
-- `Team_Leader` (lider de echipă)
+Plain Text
 
-### Interfețe și Implementări
-- `INotifier` (interfață pentru notificări)
-- `Email_Notifier` (notificări prin email)
-- `SMS_Notifier` (notificări prin SMS)
 
-### Clase de Organizare
-- `Category` (categorii pentru sarcini)
-- `Task_List` (liste de sarcini)
-- `Task_Manager` (manager central - Singleton)
-- `Task_Notes` (gestionare note pentru sarcini)
+task_management_system/
+├── include/           # Fișiere header (.h)
+├── src/               # Fișiere sursă (.cpp)
+└── README.md          # Acest fișier
 
-### Structuri și Utilități
-- `Date` (structură pentru date calendaristice)
-- `Note` (structură pentru note și comentarii)
 
-## Concepte OOP Demonstrate
+Componentele principale
 
-### 1. Abstractizare
-- Clasa abstractă `Task` cu funcții virtuale pure
-- Interfața `INotifier` pentru diferite tipuri de notificări
+Am organizat codul în câteva module logice:
 
-### 2. Moștenire
-- Ierarhie de clase `Task` → `Simple_Task`, `Project_Task`, etc.
-- Ierarhie de clase `User` → `Team_Leader`
+Ierarhia de sarcini
 
-### 3. Încapsulare
-- Membri privați în toate clasele
-- Metode publice pentru acces controlat (getteri/setteri)
-- Metode protejate pentru clasele derivate
+Am implementat o ierarhie flexibilă de sarcini, pornind de la o clasă abstractă de bază:
 
-### 4. Polimorfism
-- Funcții virtuale în clasele de bază
-- Suprascrierea funcțiilor în clasele derivate
-- Utilizarea obiectelor derivate prin pointeri la clasa de bază
+•
+Task - clasa abstractă cu interfața comună
 
-### 5. Alte Concepte Avansate
-- Supraîncărcarea operatorilor (`+`, `<<`, operatori de comparație)
-- Membri statici (contoare ID, Singleton)
-- Utilizarea struct-urilor împreună cu clasele
-- Alocarea explicită pe stack și heap
-- Design pattern Singleton (`Task_Manager`)
+•
+Simple_Task - pentru sarcini de bază, fără complexitate
 
-## Funcționalități Principale
+•
+Project_Task - pentru sarcini complexe care conțin sub-sarcini
 
-1. **Gestionarea Sarcinilor**
-   - Crearea diferitelor tipuri de sarcini
-   - Organizarea sarcinilor în categorii și liste
-   - Monitorizarea progresului și statusului sarcinilor
+•
+Recurring_Task - pentru sarcini care se repetă periodic
 
-2. **Gestionarea Utilizatorilor**
-   - Crearea utilizatorilor și liderilor de echipă
-   - Atribuirea sarcinilor către utilizatori
-   - Organizarea utilizatorilor în echipe
+•
+Deadline_Task - pentru sarcini cu termen limită
 
-3. **Notificări**
-   - Trimiterea notificărilor prin email sau SMS
-   - Notificări pentru liste de sarcini
+Utilizatori și roluri
 
-4. **Note și Comentarii**
-   - Adăugarea notelor la sarcini
-   - Căutarea și filtrarea notelor
+•
+User - utilizator standard
 
-## Instrucțiuni de Compilare
+•
+Team_Leader - extinde User cu capacități de management al echipei
 
-Proiectul poate fi compilat folosind un compilator C++11 standard:
+Notificări
 
-```bash
-# Compilare cu g++
-g++ -std=c++11 *.cpp -o task_manager
+Am folosit o interfață pentru a permite multiple implementări de notificări:
 
-# Compilare cu clang
-clang++ -std=c++11 *.cpp -o task_manager
-```
+•
+INotifier - interfața pentru sistemul de notificări
 
-## Instrucțiuni de Utilizare
+•
+Email_Notifier și SMS_Notifier - implementări concrete
 
-Exemplul principal de utilizare se găsește în fișierul `main.cpp`, care demonstrează toate funcționalitățile sistemului:
+Organizare și utilități
 
-```cpp
-// Crearea unui manager de sarcini (Singleton)
+•
+Category - pentru clasificarea sarcinilor
+
+•
+Task_List - colecții de sarcini
+
+•
+Task_Manager - singleton pentru gestionarea centralizată
+
+•
+Date - structură pentru manipularea datelor calendaristice
+
+•
+Note - structură pentru note și comentarii atașate sarcinilor
+
+Concepte POO implementate
+
+Abstractizare
+
+Am folosit abstractizarea pentru a separa interfața de implementare. De exemplu, Task definește comportamentul general al unei sarcini fără a specifica detalii de implementare:
+
+Plain Text
+
+
+class Task {
+public:
+    virtual void DisplayDetails() const = 0;
+    virtual std::string GetTaskType() const = 0;
+    // ...
+};
+
+
+Moștenire
+
+Ierarhia de sarcini demonstrează moștenirea, permițând specializarea comportamentului:
+
+Plain Text
+
+
+class Simple_Task : public Task {
+    // Implementare specifică
+};
+
+class Project_Task : public Task {
+    // Implementare specifică cu funcționalități adiționale
+};
+
+
+Încapsulare
+
+Am folosit încapsularea pentru a proteja datele interne și a oferi o interfață controlată:
+
+Plain Text
+
+
+class User {
+private:
+    std::string m_name;
+    std::string m_email;
+    
+public:
+    std::string GetName() const;
+    void SetName(const std::string& name);
+    // ...
+};
+
+
+Polimorfism
+
+Polimorfismul permite tratarea uniformă a diferitelor tipuri de sarcini:
+
+Plain Text
+
+
+// În cod:
+Task* task = new Project_Task("Redesign", "Website redesign", Priority::HIGH);
+task->DisplayDetails();  // Apelează implementarea din Project_Task
+
+
+Particularități de implementare
+
+Alocarea memoriei
+
+Am demonstrat explicit alocarea pe stack și heap:
+
+Plain Text
+
+
+// Alocare pe stack
+Date deadline(2025, 6, 15);
+Note note("Reminder", "John", "2025-05-30");
+
+// Alocare pe heap
+Task* task = new Simple_Task("Meeting", "Team sync", Priority::MEDIUM);
+User* user = new User("Alice", "alice@example.com");
+
+
+Supraîncărcarea operatorilor
+
+Am implementat supraîncărcarea operatorilor pentru operații intuitive:
+
+Plain Text
+
+
+// Combinarea listelor de sarcini
+Task_List combined = work_list + personal_list;
+
+// Afișarea sarcinilor
+std::cout << *task;
+
+// Compararea datelor
+if (today < deadline) {
+    // ...
+}
+
+
+Design patterns
+
+Am folosit Singleton pentru Task_Manager pentru a asigura o singură instanță centralizată:
+
+Plain Text
+
+
 Task_Manager& manager = Task_Manager::GetInstance();
 
-// Crearea utilizatorilor
-User* john = new User("John Smith", "john@example.com");
-User* alice = new User("Alice Johnson", "alice@example.com");
 
-// Crearea sarcinilor
-Simple_Task* task1 = new Simple_Task("Cumpără alimente", "Lapte, ouă, pâine", Priority::MEDIUM);
-Simple_Task* task2 = new Simple_Task("Sună la dentist", "Programează o consultație", Priority::LOW);
+Compilare și utilizare
 
-// Atribuirea sarcinilor utilizatorilor
-task1->AssignTo(alice);
-task2->AssignTo(john);
+Compilare
 
-// Adăugarea sarcinilor în manager
-manager.AddTask(task1);
-manager.AddTask(task2);
+Proiectul poate fi compilat cu orice compilator modern care suportă C++11:
 
-// Marcarea unei sarcini ca finalizată
-task1->SetStatus(TaskStatus::COMPLETED);
+Bash
 
-// Afișarea detaliilor sarcinii
-task1->DisplayDetails();
-```
 
-## Exemple de Alocare pe Stack și Heap
+# Cu g++
+g++ -std=c++11 -I./include src/*.cpp -o task_manager
 
-Proiectul demonstrează explicit alocarea obiectelor atât pe stack cât și pe heap:
+# Cu clang
+clang++ -std=c++11 -I./include src/*.cpp -o task_manager
 
-### Alocare pe Stack
-```cpp
-// Crearea unui obiect Date pe stack
-Date deadline_date(2025, 6, 15);
 
-// Crearea unui obiect Note pe stack (struct)
-Note stack_note("Aceasta este o notă creată pe stack", "Admin", "2025-05-30", true);
+Exemplu de utilizare
 
-// Crearea unui obiect Task_Notes pe stack
-Task_Notes stack_notes;
-```
+Plain Text
 
-### Alocare pe Heap
-```cpp
-// Crearea utilizatorilor pe heap
-User* john = new User("John Smith", "john@example.com");
 
-// Crearea sarcinilor pe heap
-Simple_Task* task1 = new Simple_Task("Buy groceries", "Milk, eggs, bread", Priority::MEDIUM);
+#include <iostream>
+#include "task.h"
+#include "simple_task.h"
+#include "user.h"
+#include "task_manager.h"
 
-// Crearea notelor pe heap
-Note* heap_note = new Note("Prioritate ridicată", "Manager", "2025-05-30", true);
-```
+int main() {
+    // Obține instanța manager-ului
+    Task_Manager& manager = Task_Manager::GetInstance();
+    
+    // Creează utilizatori
+    User* john = new User("John", "john@example.com");
+    manager.AddUser(john);
+    
+    // Creează sarcini
+    Simple_Task* task = new Simple_Task("Raport", "Finalizare raport Q2", Priority::HIGH);
+    task->AssignTo(john);
+    manager.AddTask(task);
+    
+    // Afișează detalii
+    task->DisplayDetails();
+    
+    // Eliberează memoria
+    delete john;
+    delete task;
+    
+    return 0;
+}
 
-## Utilizarea Operatorilor Supraîncărcați
 
-Proiectul demonstrează utilizarea operatorilor supraîncărcați:
+Extensii posibile
 
-```cpp
-// Utilizare operator << pentru afișarea sarcinilor
-std::cout << *task1 << std::endl;
+Proiectul poate fi extins în mai multe direcții:
 
-// Utilizare operator + pentru combinarea listelor de sarcini
-Task_List combined_list = personal_list + work_list;
+•
+Interfață grafică (Qt/wxWidgets)
 
-// Utilizare operatori de comparație pentru Date
-bool is_before = today < future_date;
-```
+•
+Persistența datelor (SQLite/fișiere)
 
-## Documentație Suplimentară
+•
+Sincronizare în rețea
 
-Pentru o înțelegere mai profundă a conceptelor OOP utilizate în proiect, consultați:
-- `ghid_poo_explicativ.md` - Ghid introductiv pentru conceptele POO
-- `ghid_complet_poo.md` - Manual detaliat cu exemple din proiect
+•
+Integrare cu servicii externe (Jira, Trello)
 
-## Autor
+Concluzie
 
-Acest proiect a fost dezvoltat ca parte a cursului de Programare Orientată pe Obiecte.
+Acest proiect demonstrează implementarea principiilor POO într-un sistem practic de management al sarcinilor. Arhitectura modulară și extensibilă permite adaptarea și extinderea ușoară pentru diferite scenarii de utilizare.
 
-## Licență
-
-Acest proiect este disponibil sub licența MIT.
